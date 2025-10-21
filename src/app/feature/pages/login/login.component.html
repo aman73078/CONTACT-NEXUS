@@ -1,0 +1,187 @@
+<!-- Main Container with full height and column layout -->
+<div class="min-h-screen flex flex-col app-bg text-gray-100">
+
+    <!-- HEADER COMPONENT - High contrast, deep shadow -->
+    <header class="sticky top-0 bg-gray-900 shadow-2xl shadow-indigo-900/50 z-10 p-5">
+        <div class="max-w-7xl mx-auto flex justify-between items-center flex-wrap">
+
+            <!-- Title -->
+            <h1 class="text-3xl font-extrabold text-indigo-400 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-7 h-7 mr-3 text-indigo-500" viewBox="0 0 24 24"
+                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 16.92v3a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-3" />
+                    <path d="m6 16-1.5-1.5v-2c0-.75.75-1.5 1.5-1.5h8c.75 0 1.5.75 1.5 1.5v2L18 16" />
+                    <path d="M12 4v7" />
+                    <path d="M12 4a2 2 0 1 1 0-4 2 2 0 0 1 0 4Z" />
+                </svg>
+                Contact Nexus <span class="text-base font-medium ml-2 text-gray-500 hidden sm:inline">|
+                    Authentication</span>
+            </h1>
+
+            <!-- Auth Status (Mocked) -->
+            <div class="mt-2 md:mt-0 text-right p-2 rounded-xl bg-indigo-900/50 border border-indigo-700">
+                <p class="text-xs font-semibold text-indigo-300">Status</p>
+                <p class="text-sm font-mono text-gray-300 break-all cursor-pointer" title="Mock UI Status">
+                    Mock {{ viewMode() | titlecase }} Page
+                </p>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT AREA - Centered Login Card with Glassmorphism Effect -->
+    <main class="flex-grow flex justify-center items-center p-4 md:p-10">
+        <div
+            class="w-full max-w-md glass-container backdrop-blur-md bg-white/5 border border-white/10 rounded-3xl p-8 md:p-10 shadow-2xl">
+
+            <h2 class="text-3xl font-light text-indigo-400 mb-8 text-center pb-4 border-b border-indigo-700/50">
+                @if (viewMode() === 'login') {
+                Login Console Access
+                } @else {
+                Register New Account
+                }
+            </h2>
+
+            <!-- Login/Register Form -->
+            <form (ngSubmit)="handleFormSubmission()" class="space-y-6">
+
+                <!-- Error Message -->
+                @if (errorMessage()) {
+                <div class="bg-red-900/50 p-3 rounded-lg border border-red-600 text-red-300 text-sm">
+                    {{ errorMessage() }}
+                </div>
+                }
+
+                <!-- Email Input -->
+                <div class="relative">
+                    <label for="email" class="text-sm font-medium text-gray-400 block mb-1">Email Address</label>
+                    <input id="email" type="email" placeholder="user@example.com"
+                        class="w-full p-3 border-b-2 border-indigo-500 bg-gray-800 text-white rounded-t-lg focus:border-indigo-400 focus:ring-0 transition duration-300 placeholder-gray-500"
+                        required [value]="email()" (input)="email.set($any($event.target).value)" autocomplete="email">
+                </div>
+
+                <!-- Password Input -->
+                <div class="relative">
+                    <label for="password" class="text-sm font-medium text-gray-400 block mb-1">Password</label>
+                    <!-- Input and Toggle Icon Container -->
+                    <div class="relative">
+                        <input id="password" [type]="isPasswordVisible() ? 'text' : 'password'" placeholder="••••••••"
+                            class="w-full p-3 border-b-2 border-indigo-500 bg-gray-800 text-white rounded-t-lg focus:border-indigo-400 focus:ring-0 transition duration-300 placeholder-gray-500 pr-10"
+                            required [value]="password()" (input)="password.set($any($event.target).value)"
+                            autocomplete="current-password">
+                        <button type="button" (click)="togglePasswordVisibility()"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-indigo-400 transition duration-150">
+                            @if (isPasswordVisible()) {
+                            <!-- Eye Off Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-eye-off">
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.46m3.02-3.02A10.37 10.37 0 0 1 12 4c7 0 11 8 11 8a18.45 18.45 0 0 1-2.09 3.16m-4.25-1.07a3 3 0 1 1-4.24-4.24" />
+                            </svg>
+                            } @else {
+                            <!-- Eye Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-eye">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            }
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Confirm Password Input (Only for Register) -->
+                @if (viewMode() === 'register') {
+                <div class="relative">
+                    <label for="confirm-password" class="text-sm font-medium text-gray-400 block mb-1">Confirm
+                        Password</label>
+                    <!-- Input and Toggle Icon Container -->
+                    <div class="relative">
+                        <input id="confirm-password" [type]="isPasswordVisible() ? 'text' : 'password'"
+                            placeholder="••••••••"
+                            class="w-full p-3 border-b-2 border-indigo-500 bg-gray-800 text-white rounded-t-lg focus:border-indigo-400 focus:ring-0 transition duration-300 placeholder-gray-500 pr-10"
+                            required [value]="confirmPassword()"
+                            (input)="confirmPassword.set($any($event.target).value)" autocomplete="new-password">
+                        <button type="button" (click)="togglePasswordVisibility()"
+                            class="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 hover:text-indigo-400 transition duration-150">
+                            @if (isPasswordVisible()) {
+                            <!-- Eye Off Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-eye-off">
+                                <path
+                                    d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.46m3.02-3.02A10.37 10.37 0 0 1 12 4c7 0 11 8 11 8a18.45 18.45 0 0 1-2.09 3.16m-4.25-1.07a3 3 0 1 1-4.24-4.24" />
+                            </svg>
+                            } @else {
+                            <!-- Eye Icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round" class="feather feather-eye">
+                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                                <circle cx="12" cy="12" r="3" />
+                            </svg>
+                            }
+                        </button>
+                    </div>
+                </div>
+                }
+
+                <!-- Action Button -->
+                <button type="submit"
+                    class="btn-action w-full p-3 mt-6 bg-indigo-600 text-white font-extrabold rounded-lg hover:bg-indigo-500 shadow-lg shadow-indigo-500/50 disabled:bg-gray-700 disabled:shadow-none transition duration-200 flex items-center justify-center"
+                    [disabled]="isLoading() || !email() || !password() || (viewMode() === 'register' && !confirmPassword())">
+                    @if (isLoading()) {
+                    <div class="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                    Processing...
+                    } @else if (viewMode() === 'login') {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect width="18" height="11" x="3" y="11" rx="2" ry="2" />
+                        <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                    </svg>
+                    Sign In (UI Only)
+                    } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 10h-6" />
+                        <path d="M19 13h-3" />
+                    </svg>
+                    Register Account
+                    }
+                </button>
+            </form>
+
+            <!-- Toggle View -->
+            <p class="text-center text-xs text-gray-500 mt-6">
+                @if (viewMode() === 'login') {
+                New user?
+                <button (click)="toggleForm()"
+                    class="text-indigo-400 hover:text-indigo-300 font-semibold transition duration-200">
+                    Create an Account
+                </button>
+                } @else {
+                Already have an account?
+                <button (click)="toggleForm()"
+                    class="text-indigo-400 hover:text-indigo-300 font-semibold transition duration-200">
+                    Sign In
+                </button>
+                }
+            </p>
+
+            <!-- Mock Hint -->
+            <p class="text-center text-xs text-gray-500 mt-4">
+                This is a pure UI demonstration. Toggle above to switch forms.
+            </p>
+        </div>
+    </main>
+
+    <!-- FOOTER COMPONENT - Minimalist and integrated into the dark theme -->
+    <footer class="bg-gray-900 text-gray-500 p-4 text-center text-sm border-t border-gray-800">
+        <p>
+            &copy; {{ currentYear() }} Contact Nexus. Pure UI Console.
+        </p>
+    </footer>
+</div>

@@ -1,0 +1,29 @@
+/* Ensure Inter font is used */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+/* Subtle dark mode background */
+.app-bg {
+    background: #111827;
+    /* Dark Gray 900 */
+    /* Subtle Gradient overlay for depth */
+    background-image: radial-gradient(at 0% 0%, #1e3a8a 0px, transparent 50%),
+        radial-gradient(at 100% 100%, #4f46e5 0px, transparent 50%);
+    background-size: 100% 100%;
+}
+
+/* Advanced Glassmorphism Container Styling */
+.glass-container {
+    /* Tailwind classes handle transparency and blur */
+}
+
+/* Animated Button State (Press effect) */
+.btn-action {
+    transition: transform 0.1s, box-shadow 0.2s;
+}
+
+.btn-action:active {
+    transform: scale(0.98);
+    box-shadow: none;
+}

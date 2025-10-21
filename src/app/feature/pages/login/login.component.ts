@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-login',
@@ -21,7 +22,7 @@ export class LoginComponent {
   // --- Utility States ---
   currentYear = signal<number>(new Date().getFullYear());
 
-  constructor() {
+  constructor(private authService:AuthService) {
     console.log("Pure UI Login/Register Component Initialized.");
   }
 
